@@ -4,5 +4,9 @@ class Item:
         self.name = name
         self.description = description
 
-    def display_item(self, item):
-        print(f"\t{item.name}: {item.description}\n")
+
+class ShowItem:
+
+    def __init__(self, item=None):
+    	if item != None:
+    		print(f"\t{item.name}: {item.description}")

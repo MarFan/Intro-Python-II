@@ -28,8 +28,8 @@ socks = item.Item('socks', 'nothing like a fresh pair of socks (freshness not gu
 gloves = item.Item('gloves', 'gotta keep those hands clean.')
 toothbrush = item.Item('toothbrush', 'fresh breath is all you need.')
 
-room['outside'].items = [backpack, socks, gloves, toothbrush]
-room['foyer'].items = [socks, gloves]
+room['outside'].items = [socks, gloves, toothbrush]
+room['overlook'].items = [backpack]
 #
 # Main
 #
@@ -53,21 +53,21 @@ os.system('clear')
 print("\n\n\t", character.current_room.name)
 print("\t", character.current_room.description)
 
-if character.current_room.items is not None:
-        print('\n\tYou see a lump in the corner of the room and find: \n')
-        for item in room['outside'].items:
-            # print(f"{item.name} {item.description}")
-            print("\t", item.name)
+# if character.current_room.items is not None:
+#         print('\n\tYou see a lump in the corner of the room and find: \n')
+#         for item in room['outside'].items:
+#             # print(f"{item.name} {item.description}")
+#             print("\t", item.name)
 
 player_direction = input(player_action).lower()
 
 while not player_direction == "q":
     os.system('clear')
 
-    if character.current_room.items is not None:
-        print('\n\tYou see a lump in the corner of the room and find: \n')
-        for item in room['outside'].items:
-            print("\t", item.name)
+    # if character.current_room.items is not None:
+    #     print('\n\tYou see a lump in the corner of the room and find: \n')
+    #     for item in room['outside'].items:
+    #         print("\t", item.name)
 
     if player_direction == 'n':
         if character.current_room.n_to != None:
@@ -89,8 +89,9 @@ while not player_direction == "q":
             character.current_room = character.current_room.w_to
         else:
             print(cant_move)
+
     elif 'inventory' in player_direction:
-        print('\n\tHere is your inventory:\n')
+        print('\n\tHere is your inventory:')
         for i in character.inventory:
             print(f"\t{i.name}")
 
@@ -111,6 +112,7 @@ while not player_direction == "q":
             print('how did you find that?')
 
         print('\n\tYou added the', to_get, 'to your backpack')
+
     elif 'drop' in player_direction:
         to_drop = player_direction.split(" ", 1)[1]
         # remove from inventory
@@ -121,10 +123,15 @@ while not player_direction == "q":
                 character.current_room.items.append(x)
 
         print('\n\tYou just dropped ', to_drop)
-    elif 'look' in player_direction:
+
+    elif 'search' in player_direction:
         """ See what items are hiding somewhere in the room """
-        for i in character.current_room.items:
-            item.display_item(i)
+        if character.current_room.items != None:
+            print('\n\tAfter searching around, for what felt like hours you found:\n')
+            for i in character.current_room.items:
+                item.ShowItem(i)
+        else:
+            print('You search in vain, there is nothing here worth taking.')
     else:
         print('\n\tYou spin in circles not knowing which direction to go.\n')
 
