@@ -97,14 +97,12 @@ while not player_direction == "q":
     elif 'get' in player_direction:
         to_get = player_direction.split(" ", 1)[1]
         # add to inventory
-        
         item_in_inventory = [True for x in character.inventory if x.name == to_get]
         if item_in_inventory != True:
             """ Add item to character inventory """
             for x in character.current_room.items:
                 if to_get in x.name:
                     character.add_item(x)
-                    #Room.picked_item(x)
                     item_index = character.current_room.items.index(x)
                     character.current_room.items.pop(item_index)
             """ Remove item from room """
@@ -116,8 +114,11 @@ while not player_direction == "q":
     elif 'drop' in player_direction:
         to_drop = player_direction.split(" ", 1)[1]
         # remove from inventory
-
-        # add to room
+        for x in character.inventory:
+            if to_drop in x.name:
+                character.drop_item(x)
+                # add to room
+                character.current_room.items.append(x)
 
         print('\n\tYou just dropped ', to_drop)
     elif 'look' in player_direction:
