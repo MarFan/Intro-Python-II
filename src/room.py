@@ -10,17 +10,17 @@ class Room:
         if items is None:
             self.items = []
         else:
-            self.items = item
+            self.items = items
 
         self.n_to = n_to
         self.s_to = s_to
         self.e_to = e_to
         self.w_to = w_to
 
-    def dropped_item(self, item):
+    def dropped_item(item):
         """ A dropped item is added to the room """
         pass
 
-    def picked_item(self, item):
+    def picked_item(item):
         """ A picked item is removed from the room and added to player inventory """
-        pass
+        print(f"{item.name} {item.description}")

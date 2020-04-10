@@ -12,6 +12,7 @@ class Character:
         	self.inventory = inventory
 
     def add_item(self, item):
+    	#print(f"{item.name} {item.description}")
     	self.inventory.append(item)
 
     def remove_item(self, item):

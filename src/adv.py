@@ -24,13 +24,12 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 backpack = item.Item('backpack', 'something to hold your treasure.')
-socks = item.Item(
-    'socks', 'nothing like a fresh pair of socks (freshness not guaranteed).')
+socks = item.Item('socks', 'nothing like a fresh pair of socks (freshness not guaranteed).')
 gloves = item.Item('gloves', 'gotta keep those hands clean.')
 toothbrush = item.Item('toothbrush', 'fresh breath is all you need.')
 
-room['outside'].items = (backpack, socks, gloves, toothbrush)
-
+room['outside'].items = [backpack, socks, gloves, toothbrush]
+room['foyer'].items = [socks, gloves]
 #
 # Main
 #
@@ -51,29 +50,25 @@ cant_move = "You are blocked from heading that direction.\n"
 #
 # If the user enters "q", quit the game.
 os.system('clear')
-print("\t", character.current_room.name)
+print("\n\n\t", character.current_room.name)
 print("\t", character.current_room.description)
 
-character.add_item(backpack)
-
-#item_in_inventory = [True for x in character.inventory if x.name == "backpack"]
-#print(item_in_inventory)
-#print(type(character.inventory))
-#test = 'backpack'
-#for i in character.inventory:
-#    if i.name == test:
-#        print(i)
-
 if character.current_room.items is not None:
-    print('\n\tYou see a lump in the corner of the room and find: \n')
-    for item in room['outside'].items:
-        # print(f"{item.name} {item.description}")
-        print("\t", item.name)
+        print('\n\tYou see a lump in the corner of the room and find: \n')
+        for item in room['outside'].items:
+            # print(f"{item.name} {item.description}")
+            print("\t", item.name)
 
 player_direction = input(player_action).lower()
 
 while not player_direction == "q":
     os.system('clear')
+
+    if character.current_room.items is not None:
+        print('\n\tYou see a lump in the corner of the room and find: \n')
+        for item in room['outside'].items:
+            print("\t", item.name)
+
     if player_direction == 'n':
         if character.current_room.n_to != None:
             character.current_room = character.current_room.n_to
@@ -95,26 +90,29 @@ while not player_direction == "q":
         else:
             print(cant_move)
     elif 'inventory' in player_direction:
-        print('\tHere is your inventory:\n')
+        print('\n\tHere is your inventory:\n')
         for i in character.inventory:
-            print(f"\t{i.name}\n")
+            print(f"\t{i.name}")
+
     elif 'get' in player_direction:
         to_get = player_direction.split(" ", 1)[1]
         # add to inventory
-        # item.add_item(player.current_room.items[to_get][1])
+        
         item_in_inventory = [True for x in character.inventory if x.name == to_get]
         if item_in_inventory != True:
             """ Add item to character inventory """
-            character.add_item([x for x in character.inventory if x.name == to_get])
+            for x in character.current_room.items:
+                if to_get in x.name:
+                    character.add_item(x)
+                    #Room.picked_item(x)
+                    item_index = character.current_room.items.index(x)
+                    character.current_room.items.pop(item_index)
             """ Remove item from room """
-            #character.current_room.picked_item([x for x in character.inventory if x.name == to_get])
+            
         else:
             print('how did you find that?')
 
-        # remove from room
-        # room.items(player.current_room.items[to_get][1])
-
-        print('\n\tYou added the ', to_get, ' to your backpack')
+        print('\n\tYou added the', to_get, 'to your backpack')
     elif 'drop' in player_direction:
         to_drop = player_direction.split(" ", 1)[1]
         # remove from inventory
@@ -123,16 +121,13 @@ while not player_direction == "q":
 
         print('\n\tYou just dropped ', to_drop)
     elif 'look' in player_direction:
-        to_look = player_direction.split(" ")[1]
+        """ See what items are hiding somewhere in the room """
         for i in character.current_room.items:
-            if i.name == to_look:
-                #print(f"{i.name}: {i.description}")
-                item.display_item(i)
-                #print()
+            item.display_item(i)
     else:
         print('\n\tYou spin in circles not knowing which direction to go.\n')
 
-    print("\t", character.current_room.name)
+    print("\n\n\t", character.current_room.name)
     print("\t", character.current_room.description)
 
     player_direction = input(player_action).lower()
